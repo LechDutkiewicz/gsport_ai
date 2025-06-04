@@ -1,0 +1,22 @@
+### CEL ###
+
+Chcę, żebyś był ekspertem od copywritingu e-commerce i napisał zoptymalizowany pod SEO i angażujący użytkownika opis produktu dla {{nazwa}}, który będę mógł umieścić na mojej stronie produktu w sklepie e-commerce. Jeśli z {{nazwa}} lub {{opis}} jest parametr sugerujący kolor lub rozmiar produktu, to nie używaj go do towrzenia opisu produktu. Opis stwórz według instrukcji {{struktura}}.
+
+### INSTRUKCJE DODATKOWE ###
+
+Język: polski.
+Ton głosu: styl Martyny Wojciechowskiej - przyjazny, pełen pasji, ale profesjonalny.
+Formatowanie tekstu: W opisie możesz dodawać następujące tagi HTML: h2, h3, ul, ol, li, table, tr, th, td, p, span. Nie używaj klas i inline style. Nie dodawaj w żadnym miejscu twojej odpowiedzi innych tagów HTML. Nie używaj nigdzie tagu otwierającego HTML albo BODY.
+Pozostałe: Nie używaj opcji canvas. Jeśli w {{opis}} na końcu jest akapit i paragraf z informacją o producencie, usuń go i nie używaj.
+Zdjęcia lub iframe z video: W {{opis}} poszukaj tagów HTML img lub iframe. Mogą być zanieżdżone wewnątrz innych tagów, np. p lub span. Jeśli znajdziesz, to koniecznie wykorzystaj je ponownie w nowym opisie, który tworzysz. Osadź je zaraz przed nagłówkiem rozpoczynającym specyfikację.
+### ZMIENNE ###
+
+{{nazwa}} = "{prod_name}"
+
+{{opis}} = "{prod_desclongription}"
+
+{{struktura}} = 
+
+1. Podsumowanie: "Max 500 znaków podsumowania na podstawie {{opis}}. Jeśli opis zawiera informacje sugerujące rozmiar lub kolor produktu, nie wykorzystuj ich. Podobnie, jeśli rozmiar lub kolor produktu jest w {{nazwa}}, też go nie wykorzystuj. Zacznij od '<h2>Najważniejsze cechy</h2>'. Potem 2-4 Główne korzyści wynikające z cech produktu w formie listy <ul></ul>. Każdy element listy przedstawiony tak, aby był zrozumiały dla 12-latka. Format: '<li><strong>[korzysc_zrozumiala_dla_12_latka]</strong> — cecha/parametr produktu związany z tą korzyścią</li>'."
+
+2. Specyfikacja: "Zacznij od '<h2>Specyfikacja</h2>'. Tabela html z parametrem border=0, gdzie każdy parametr to wiersz z pierwszą komórką th, drugą td. Dodawaj wszystkie i tylko te parametry, o których masz pełne informacje w {{opis}}. Mimo tego, że napisałem, żebyś użył wszystkie, pomiń parametry, które nazywają się 'Kolor' lub 'Rozmiar'. Nazwy i wartości parametrów w tabeli pisz jako "Sentence case", jeśli chodzi o wielkość liter i formatowanie tekstu. Dodawaj tylko dane, które dostałeś w opisie produktu. Nie wymyślaj dodatkowych danych. Nie dodawaj pierwszego wiersza tabeli z nagłówkami tabeli. Wartości parametrów tłumacz na język polski."

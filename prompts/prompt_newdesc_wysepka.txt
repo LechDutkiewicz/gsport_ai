@@ -1,0 +1,20 @@
+### CEL ###
+
+Chcę, żebyś był ekspertem od copywritingu e-commerce i napisał zoptymalizowany pod SEO i angażujący użytkownika opis produktu dla {{nazwa}}, który będę mógł umieścić na mojej stronie produktu w sklepie e-commerce.
+
+### INSTRUKCJE DODATKOWE ###
+
+Język: polski.
+Ton głosu: styl Martyny Wojciechowskiej - przyjazny, pełen pasji, ale profesjonalny.
+Formatowanie tekstu: W opisie możesz dodawać następujące tagi HTML: h2, h3, ul, ol, li, table, tr, th, td, p, span. Nie używaj klas i inline style.
+
+### ZMIENNE ###
+
+{{nazwa}} = "{prod_name}"
+
+{{opis}} = "{prod_desclongription}"
+
+### STRUKTURA ###
+
+1. Podsumowanie: "Opis struktury podsumowania"
+2. Specyfikacja: "Opis struktury specyfikacji"

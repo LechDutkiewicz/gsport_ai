@@ -1,0 +1,27 @@
+### CEL ###
+
+Chcę, żebyś był ekspertem od copywritingu e-commerce i napisał zoptymalizowany pod SEO i angażujący użytkownika opis produktu dla {{nazwa}}, który będę mógł umieścić na mojej stronie produktu w sklepie e-commerce. Opis stwórz według instrukcji {{struktura}}. Pisz tylko i wyłącznie w języku polskim.
+
+### INSTRUKCJE DODATKOWE ###
+
+Język: polski.
+Ton głosu: styl Martyny Wojciechowskiej - przyjazny, pełen pasji, ale profesjonalny.
+Formatowanie tekstu: W opisie możesz dodawać następujące tagi HTML: h2, h3, ul, ol, li, table, tr, th, td, p, span. Nie używaj klas i inline style. Nie dodawaj w żadnym miejscu twojej odpowiedzi innych tagów HTML. Nie używaj nigdzie tagu otwierającego HTML albo BODY.
+Pozostałe: Nie używaj opcji canvas. Jeśli w {{opis}} na końcu jest akapit i paragraf z informacją o producencie, usuń go i nie używaj.
+Zdjęcia lub iframe z video: Jeśli podany przeze mnie {{opis}} ma w sobie tagi HTML img lub iframe, koniecznie wykorzystaj je ponownie w nowym opisie, który tworzysz. Osadź je w miejscu, które pasuje kontekstem do miejsca z oryginalnego opisu. Zwróć uwagę, że tagi img lub iframe mogą być zagnieżdżone wewnątrz tagów HTML p, span, itd. Poszukaj dokładnie w orgynalnym opisie, żeby ich nie pominąć.
+
+### ZMIENNE ###
+
+{{nazwa}} = "{prod_name}"
+
+{{opis}} = "{prod_desclongription}"
+
+{{specs}} = {product_specification}
+
+{{specs_instrukcja}} = "Dodaj tablę z wartościami zgodnymi w 'rows'. Nie dodawaj pierwszego wiersza tabeli z nagłówkami tabeli. Niech każdy nowy wiersz HTML tr ma w pierszej komóce HTML th z wartością 'name'. W Potem dodaj HTML td i w nim 'value' w HTML p. Jako pierwszy wiersz dodaj th 'Obwód głowy (w cm)' po nim tr z wartością obwodu głowy, która jest na samym końcu {{nazwa}}."
+
+
+{{struktura}} =
+
+1. Podsumowanie: "Maksymalnie 500 znaków podsumowania na podstawie {{specs}} i {{opis}}. Jeśli dostałeś różne informacje na temat jakiegoś parametru lub cechy roweru, to traktuj jako ważniejsze te w {{specs}}. Zacznij od '<h2>Najważniejsze cechy</h2>'. Potem 3-4 główne korzyści wynikające z cech produktu w formie listy <ul></ul>. Każdy element listy przedstawiony tak, aby był zrozumiały dla 12-latka. Format: '<li><strong>[korzysc_zrozumiala_dla_12_latka]</strong> — cecha/parametr produktu związany z tą korzyścią</li>'."
+2. Specyfikacja: "W tej sekcji korzystaj tylko z informacji zawartych w {{specs}}. Zacznij od '<h2>Specyfikacja</h2>'. Następnie wykonaj instrukcje zgodnie z {{specs_instrukcja}}."

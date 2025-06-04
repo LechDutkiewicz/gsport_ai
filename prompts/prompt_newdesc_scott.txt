@@ -1,0 +1,75 @@
+### CEL ###
+
+Chcę, żebyś był ekspertem od copywritingu e-commerce i napisał zoptymalizowany pod SEO i angażujący użytkownika opis produktu dla {{nazwa}}, który będę mógł umieścić na mojej stronie produktu w sklepie e-commerce. Opis stwórz według instrukcji {{struktura}}.
+
+### INSTRUKCJE DODATKOWE ###
+
+Język: polski.
+Ton głosu: styl Martyny Wojciechowskiej - przyjazny, pełen pasji, ale profesjonalny.
+Formatowanie tekstu: W opisie możesz dodawać następujące tagi HTML: h2, h3, ul, ol, li, table, tr, th, td, p, span. Nie używaj klas i inline style. Nie dodawaj w żadnym miejscu twojej odpowiedzi innych tagów HTML. Nie używaj nigdzie tagu otwierającego HTML albo BODY.
+Pozostałe: Nie używaj opcji canvas. Jeśli w {{opis}} na końcu jest akapit i paragraf z informacją o producencie, usuń go i nie używaj.
+Zdjęcia lub iframe z video: Jeśli podany przeze mnie {{opis}} ma w sobie tagi HTML img lub iframe, koniecznie wykorzystaj je ponownie w nowym opisie, który tworzysz. Osadź je w miejscu, które pasuje kontekstem do miejsca z oryginalnego opisu. Zwróć uwagę, że tagi img lub iframe mogą być zagnieżdżone wewnątrz tagów HTML p, span, itd. Poszukaj dokładnie w orgynalnym opisie, żeby ich nie pominąć.
+
+### ZMIENNE ###
+
+{{nazwa}} = "{prod_name}"
+
+{{opis}} = "{prod_desclongription}"
+
+{{parametry}} =
+
+| Tłumaczenie              | Pasuje do nagłówka     |
+| ------------------------ |------------------------|
+| Rama                     | Rama i komponenty      |
+| Widelec                  | Rama i komponenty      |
+| Tylny amortyzator        | Rama i komponenty      |
+| Suport                   | Rama i komponenty      |
+| Stery                    | Rama i komponenty      |
+| Mostek                   | Rama i komponenty      |
+| Kierownica               | Rama i komponenty      |
+| Siodełko                 | Rama i komponenty      |
+| Sztyca                   | Rama i komponenty      |
+| Gripy                    | Rama i komponenty      |
+| Pedały                   | Rama i komponenty      |
+| Waga                     | Rama i komponenty      |
+| Maksymalna waga kierowcy | Rama i komponenty      |
+| Tylna przerzutka         | Napęd i hamulce        |
+| Przednia przerzutka      | Napęd i hamulce        |
+| Korba                    | Napęd i hamulce        |
+| Manetki                  | Napęd i hamulce        |
+| Kaseta                   | Napęd i hamulce        |
+| Łańcuch                  | Napęd i hamulce        |
+| Hamulce                  | Napęd i hamulce        |
+| Klamki hamulcowe         | Napęd i hamulce        |
+| Obręcze                  | Koła                   |
+| Oś przednia              | Koła                   |
+| Oś tylna                 | Koła                   |
+| Opony                    | Koła                   |
+| Tarcze hamulcowe         | Koła                   |
+| Silnik                   | Komponenty elektryczne |
+| Bateria                  | Komponenty elektryczne |
+| Wyświetlacz              | Komponenty elektryczne |
+| Ładowarka                | Komponenty elektryczne |
+| Światła                  | Akcesoria              |
+| Bagażnik                 | Akcesoria              |
+| Zamek                    | Akcesoria              |
+| Stopka                   | Akcesoria              |
+
+
+{{spec_naglowki}} =
+
+| Termin                 |
+|------------------------|
+| Rama i komponenty      |
+| Napęd i hamulce        |
+| Koła                   |
+| Komponenty elektryczne |
+| Akcesoria              |
+
+{{specs_instrukcja}} = "Stwórz tablę html ze specyfikacją produktu według informacji dostępnych w {{opis}}. Parametry specyfikacji znajdziesz wewnątrz tagów 'dl' w {{opis}}. Nie dodawaj pierwszego wiersza tabeli z nagłówkami tabeli. Każdy wiersz tabeli zrób według szablonu '<tr><th>[przetłumacz wartość z tagu dt według danych w {{parametry}}]</th><td><p>[wstaw wartość z tagu dd]</p></td></tr>'. Dodaj w ten sposób wszystkie parametry dostępne w {{opis}}. Tabelę specyfikacji rozdziel na osobne tabele z nagłówkiem H3 nad każdą z nich zgodnie z {{spec_naglowki}} i pod każdym nagłówkiem dodaj parametry według kolumny 'Pasuje do nagłówka' w {{parametry}}. Nie wszystkie parametry z {{opis}} pasują do podziału w {{parametry}}. Jeśli znajdziesz takie, które nie pasują, staraj się sam je odpowiednio rozmieścić."
+
+{{struktura}} =
+
+1. Podsumowanie: "Maksymalnie 500 znaków podsumowania na podstawie {{opis}}. Zacznij od '<h2>Najważniejsze cechy</h2>'. Potem 2-4 Główne korzyści wynikające z cech produktu w formie listy <ul></ul>. Każdy element listy przedstawiony tak, aby był zrozumiały dla 12-latka. Format: '<li><strong>[korzysc_zrozumiala_dla_12_latka]</strong> — cecha/parametr produktu związany z tą korzyścią</li>'."
+2. Specyfikacja: "W tej sekcji korzystaj tylko z informacji zawartych w {{opis}}. Zacznij od '<h2>Specyfikacja</h2>'. Następnie wykonaj instrukcje zgodnie z {{specs_instrukcja}}."
+3. Technologie: "Maksymalnie 1000 znaków opisu technologii użytych w produkcie, jeśli dotyczy. Zacznij od nagłówka '<h2>Technologie</h2>'. Rozwiń na 200-250 znaków każdą z korzyści, którą opisałeś w sekcji 'Podsumowanie'. Do każdej z nich dodaj tag HTML h3 z nazwą danej cechy/parametru produktu."

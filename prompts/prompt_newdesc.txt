@@ -1,0 +1,75 @@
+### CEL ###
+
+Chcę, żebyś był ekspertem od copywritingu e-commerce i napisał zoptymalizowany pod SEO i angażujący użytkownika opis produktu dla {{nazwa}}, który będę mógł umieścić na mojej stronie produktu w sklepie e-commerce. Jeśli z {{nazwa}} lub {{opis}} jest parametr sugerujący kolor lub rozmiar produktu, to nie używaj go do towrzenia opisu produktu. Opis stwórz według instrukcji {{struktura}}.
+
+### INSTRUKCJE DODATKOWE ###
+
+Język: polski.
+Ton głosu: styl Martyny Wojciechowskiej - przyjazny, pełen pasji, ale profesjonalny.
+Formatowanie tekstu: W opisie możesz dodawać następujące tagi HTML: h2, h3, ul, ol, li, table, tr, th, td, p, span. Nie używaj klas i inline style. Nie dodawaj w żadnym miejscu twojej odpowiedzi innych tagów HTML. Nie używaj nigdzie tagu otwierającego HTML albo BODY.
+Pozostałe: Nie używaj opcji canvas. Jeśli w {{opis}} na końcu jest akapit i paragraf z informacją o producencie, usuń go i nie używaj.
+Zdjęcia lub iframe z video: Jeśli podany przeze mnie {{opis}} ma w sobie tagi HTML img lub iframe, koniecznie wykorzystaj je ponownie w nowym opisie, który tworzysz. Osadź je w miejscu, które pasuje kontekstem do miejsca z oryginalnego opisu. Zwróć uwagę, że tagi img lub iframe mogą być zagnieżdżone wewnątrz tagów HTML p, span, itd. Poszukaj dokładnie w orgynalnym opisie, żeby ich nie pominąć.
+
+### ZMIENNE ###
+
+{{nazwa}} = "{prod_name}"
+
+{{opis}} = "{prod_desclongription}"
+
+{{tlum}} =
+
+| Termin                   | Tłumaczenie              | Pasuje do nagłówka     |
+| ------------------------ | ------------------------ |------------------------|
+| Frame                    | Rama                     | Rama i komponenty      |
+| Fork                     | Widelec                  | Rama i komponenty      |
+| Shock                    | Tylny amortyzator        | Rama i komponenty      |
+| Bottom Bracket           | Suport                   | Rama i komponenty      |
+| Headset                  | Stery                    | Rama i komponenty      |
+| Stem                     | Mostek                   | Rama i komponenty      |
+| Handlebar                | Kierownica               | Rama i komponenty      |
+| Saddle                   | Siodełko                 | Rama i komponenty      |
+| Seatpost                 | Sztyca                   | Rama i komponenty      |
+| Grips                    | Gripy                    | Rama i komponenty      |
+| Pedals                   | Pedały                   | Rama i komponenty      |
+| Weight                   | Waga                     | Rama i komponenty      |
+| Permissible total weight | Maksymalna waga kierowcy | Rama i komponenty      |
+| Rear Derailleur          | Tylna przerzutka         | Napęd i hamulce        |
+| Front Derailleur         | Przednia przerzutka      | Napęd i hamulce        |
+| Crank                    | Korba                    | Napęd i hamulce        |
+| Shifters                 | Manetki                  | Napęd i hamulce        |
+| Cassette                 | Kaseta                   | Napęd i hamulce        |
+| Chain                    | Łańcuch                  | Napęd i hamulce        |
+| Brakes                   | Hamulce                  | Napęd i hamulce        |
+| Breake Levers            | Klamki hamulcowe         | Napęd i hamulce        |
+| Rims                     | Obręcze                  | Koła                   |
+| Front Hub                | Oś przednia              | Koła                   |
+| Rear Hub                 | Oś tylna                 | Koła                   |
+| Tires                    | Opony                    | Koła                   |
+| Disc Rotors              | Tarcze hamulcowe         | Koła                   |
+| Motor                    | Silnik                   | Komponenty elektryczne |
+| Battery                  | Bateria                  | Komponenty elektryczne |
+| Display                  | Wyświetlacz              | Komponenty elektryczne |
+| Charger                  | Ładowarka                | Komponenty elektryczne |
+| Lights                   | Światła                  | Akcesoria              |
+| Racks                    | Bagażnik                 | Akcesoria              |
+| Lock                     | Zamek                    | Akcesoria              |
+| Stand                    | Stopka                   | Akcesoria              |
+
+
+{{spec_naglowki}} =
+
+| Termin                 |
+|------------------------|
+| Rama i komponenty      |
+| Napęd i hamulce        |
+| Koła                   |
+| Komponenty elektryczne |
+| Akcesoria              |
+
+{{struktura}} = 
+
+1. Podsumowanie: "Max 500 znaków podsumowania na podstawie {{opis}}. Jeśli opis zawiera informacje sugerujące rozmiar lub kolor produktu, nie wykorzystuj ich. Podobnie, jeśli rozmiar lub kolor produktu jest w {{nazwa}}, też go nie wykorzystuj. Zacznij od '<h2>Najważniejsze cechy</h2>'. Potem 2-4 Główne korzyści wynikające z cech produktu w formie listy <ul></ul>. Każdy element listy przedstawiony tak, aby był zrozumiały dla 12-latka. Format: '<li><strong>[korzysc_zrozumiala_dla_12_latka]</strong> — cecha/parametr produktu związany z tą korzyścią</li>'."
+
+2. Specyfikacja: "Zacznij od '<h2>Specyfikacja</h2>'. Tabela html z parametrem border=0, gdzie każdy parametr to wiersz z pierwszą komórką th, drugą td. Dodawaj wszystkie i tylko te parametry, o których masz pełne informacje w {{opis}}. Mimo tego, że napisałem, żebyś użył wszystkie, pomiń parametry, które nazywają się 'Kolor' lub 'Rozmiar'. Nazwy i wartości parametrów w tabeli pisz jako "Sentence case", jeśli chodzi o wielkość liter i formatowanie tekstu. Dodawaj tylko dane, które dostałeś w opisie produktu. Nie wymyślaj dodatkowych danych. Nie dodawaj pierwszego wiersza tabeli z nagłówkami tabeli. Jeśli dane w specyfikacji są w innym języku, niż polski, staraj się je przetłumaczyć na język polski. Jeśli znajdziesz jakiś z parametrów, który pasuje do tłumaczeń z {{tlum}}, to przetłumacz go w ten sposób. Jeśli nie ma go w {{tlum}}, przetłumacz na polski. Jeśli rozeznasz na podstawie {{nazwa}} i {{opis}}, że produkt to rower, to dodatkowo tabelę specyfikacji rozdziel na osobne tabele z nagłówkiem H3 nad każdą z nich zgodnie z {{spec_naglowki}} i pod każdym nagłówkiem dodaj parametry według kolumny 'Pasuje do nagłówka' w {{tlum}}."
+
+3. Technologie: "Maksymalnie 1000 znaków opisu technologii użytych w produkcie, jeśli dotyczy. Zacznij od nagłówka '<h2>Technologie</h2>'. Rozwiń na 200-250 znaków każdą z korzyści, którą opisałeś w sekcji 'Podsumowanie'. Do każdej z nich dodaj tag HTML h3 z nazwą danej cechy/parametru produktu."

@@ -1,0 +1,93 @@
+### CEL ###
+
+Chcę, żebyś był ekspertem od copywritingu e-commerce i napisał zoptymalizowany pod SEO i angażujący użytkownika opis produktu dla {{nazwa}}, który będę mógł umieścić na mojej stronie produktu w sklepie e-commerce. Opis stwórz według instrukcji {{struktura}}.
+
+### INSTRUKCJE DODATKOWE ###
+
+Język: polski.
+Ton głosu: styl Martyny Wojciechowskiej - przyjazny, pełen pasji, ale profesjonalny.
+Formatowanie tekstu: W opisie możesz dodawać następujące tagi HTML: h2, h3, ul, ol, li, table, tr, th, td, p, span. Nie używaj klas i inline style. Nie dodawaj w żadnym miejscu twojej odpowiedzi innych tagów HTML. Nie używaj nigdzie tagu otwierającego HTML albo BODY.
+Pozostałe: Nie używaj opcji canvas. Jeśli w {{opis}} na końcu jest akapit i paragraf z informacją o producencie, usuń go i nie używaj.
+
+### ZMIENNE ###
+
+{{nazwa}} = "{prod_name}"
+
+{{opis}} = "{prod_desclongription}"
+
+{{specs}} = {product_specification}
+
+{{tlum_naglowki}} =
+
+| Termin              | Tłumaczenie            |
+|---------------------|------------------------|
+| Build               | Rama i komponenty      |
+| Groupset            | Napęd i hamulce        |
+| Wheels              | Koła                   |
+| Electric Components | Komponenty elektryczne |
+| Accessories         | Akcesoria              |
+
+
+{{tlum}} =
+
+| Termin                    | Tłumaczenie              |
+| ------------------------- | ------------------------ |
+| Frame                     | Rama                     |
+| Fork                      | Widelec                  |
+| Shock                     | Tylny amortyzator        |
+| Bottom Bracket            | Suport                   |
+| Headset                   | Stery                    |
+| Stem                      | Mostek                   |
+| Handlebar                 | Kierownica               |
+| Saddle                    | Siodełko                 |
+| Seatpost                  | Sztyca                   |
+| Grips                     | Gripy                    |
+| Pedals                    | Pedały                   |
+| Rear Derailleur           | Tylna przerzutka         |
+| Front Derailleur          | Przednia przerzutka      |
+| Crank                     | Korba                    |
+| Shifters                  | Manetki                  |
+| Cassette                  | Kaseta                   |
+| Chain                     | Łańcuch                  |
+| Brakes                    | Hamulce                  |
+| Breake Levers             | Klamki hamulcowe         |
+| Rims                      | Obręcze                  |
+| Front Hub                 | Oś przednia              |
+| Rear Hub                  | Oś tylna                 |
+| Tires                     | Opony                    |
+| Disc Rotors               | Tarcze hamulcowe         |
+| Motor                     | Silnik                   |
+| Battery                   | Bateria                  |
+| Display                   | Wyświetlacz              |
+| Charger                   | Ładowarka                |
+| Lights                    | Światła                  |
+| Racks                     | Bagażnik                 |
+| Lock                      | Zamek                    |
+| Stand                     | Stopka                   |
+| Permissible system weight | Maksymalna waga kierowcy |
+| Fender                    | Błotnik                  |
+
+
+{{tlum_extras}} =
+
+| Termin          | Tłumaczenie                  |
+|-----------------|------------------------------|
+| BB Standard     | Standard suportu             |
+| Hanger Stanrard | Standard wieszaka przerzutki |
+| Colors          | Kolory                       |
+| Tire Clearance  | Prześwit opon                |
+| Hanger Standard | Standard haka przerzutki     |
+| Travel          | Skok                         |
+| Spring Type     | Rodzaj sprężyny              |
+| Type            | Typ                          |
+
+
+{{specs_instrukcja}} = "Dla każdego 'title' w {{specs}} dodaj tag HTML h3. Jeśli pierwszy 'title' w {{specs}} ma wartość 'Build' to przetłumacz wartość 'title' zgodnie z {{tlum_naglowki}}. Dla kazdego 'title' w {{specs}} dodaj pod nagłówkiem HTML table z wartościami zgodnymi w 'rows'. Nie dodawaj pierwszego wiersza tabeli z nagłówkami tabeli. Niech każdy nowy wiersz HTML tr ma w pierszej komóce HTML th z wartością 'name' przetlumaczoną według wartości w {{tlum}}. W Potem dodaj HTML td i w nim przetłumaczoną na polski 'value' w HTML p. Gramatykę tłumaczenia dopasuj do 'title' dla danego 'value' tak, żeby brzmiało poprawnie po polsku. Jeśli dla danego 'row' znajdziesz 'extra', to każdą wartość dodaj wewnątrz tego samego td jako osobny HTML small wewnątrz tego samego i przetlumacz według {{tlum_extras}}."
+
+
+{{struktura}} =
+
+1. Podsumowanie: "Maksymalnie 500 znaków podsumowania na podstawie {{specs}} i {{opis}}. Jeśli dostałeś różne informacje na temat jakiegoś parametru lub cechy roweru, to traktuj jako ważniejsze te w {{specs}}. Zacznij od '<h2>Najważniejsze cechy</h2>'. Potem 3-4 główne korzyści wynikające z cech produktu w formie listy <ul></ul>. Każdy element listy przedstawiony tak, aby był zrozumiały dla 12-latka. Format: '<li><strong>[korzysc_zrozumiala_dla_12_latka]</strong> — cecha/parametr produktu związany z tą korzyścią</li>'."
+2. Iframe z video: Tylko i wyłącznie w przypadku, jeśli podany przeze mnie {{opis}} ma w sobie iframe, koniecznie wykorzystaj je ponownie w nowym opisie, który tworzysz. Osadź je zaraz przed nagłówkiem h2 "Specyfikacja". Zwróć uwagę, że iframe mogą być zagnieżdżone wewnątrz tagów HTML p, span, itd. Poszukaj dokładnie w orgynalnym opisie, żeby go nie pominąć. Jeśli znajdziesz, to ustaw dla iframe width=800 i height=450.
+3. Specyfikacja: "W tej sekcji korzystaj tylko z informacji zawartych w {{specs}}. Zacznij od '<h2>Specyfikacja</h2>'. Następnie wykonaj instrukcje zgodnie z {{specs_instrukcja}}."
+4. Technologie: "Maksymalnie 1000 znaków opisu technologii użytych w produkcie, jeśli dotyczy. Zacznij od nagłówka '<h2>Technologie</h2>'. Rozwiń na 200-250 znaków każdą z korzyści, którą opisałeś w sekcji 'Podsumowanie'. Do każdej z nich dodaj tag HTML h3 z nazwą danej cechy/parametru produktu."
