@@ -1,6 +1,6 @@
 # ui_components.py
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
 import requests
 from io import BytesIO
@@ -224,6 +224,144 @@ class ProductInfoPanel:
             state="disabled"
         )
         self.btn_clear_color.pack(side="left", padx=(5, 0))
+        self._create_height_selector(parent)
+
+    def _create_height_selector(self, parent):
+        """Utwórz selektor zakresu wzrostu"""
+        from height_manager import HeightManager
+        
+        self.height_frame = tk.Frame(parent, bg="#FFFFFF")
+        self.height_frame.pack(fill="x", pady=(0, 10))
+        
+        height_label = tk.Label(
+            self.height_frame,
+            text="Zakres wzrostu (dla rowerów):",
+            font=("Arial", 9),
+            bg="#FFFFFF",
+            fg="#666666"
+        )
+        height_label.pack(anchor="w", pady=(0, 5))
+        
+        # Ramka z inputami zakresu
+        range_frame = tk.Frame(self.height_frame, bg="#FFFFFF")
+        range_frame.pack(fill="x", pady=(0, 5))
+        
+        # Minimalny wzrost
+        tk.Label(
+            range_frame,
+            text="Od:",
+            font=("Arial", 9),
+            bg="#FFFFFF",
+            fg="#666666"
+        ).pack(side="left")
+        
+        self.height_min_var = tk.StringVar()
+        self.height_min_entry = tk.Entry(
+            range_frame,
+            textvariable=self.height_min_var,
+            width=5,
+            font=("Arial", 9),
+            justify="center"
+        )
+        self.height_min_entry.pack(side="left", padx=(5, 10))
+        
+        tk.Label(
+            range_frame,
+            text="Do:",
+            font=("Arial", 9),
+            bg="#FFFFFF",
+            fg="#666666"
+        ).pack(side="left")
+        
+        self.height_max_var = tk.StringVar()
+        self.height_max_entry = tk.Entry(
+            range_frame,
+            textvariable=self.height_max_var,
+            width=5,
+            font=("Arial", 9),
+            justify="center"
+        )
+        self.height_max_entry.pack(side="left", padx=(5, 10))
+        
+        tk.Label(
+            range_frame,
+            text="cm",
+            font=("Arial", 9),
+            bg="#FFFFFF",
+            fg="#666666"
+        ).pack(side="left")
+        
+        # Przyciski
+        button_frame = tk.Frame(range_frame, bg="#FFFFFF")
+        button_frame.pack(side="right")
+        
+        self.btn_set_height = tk.Button(
+            button_frame,
+            text="Ustaw",
+            font=("Arial", 8),
+            bg="#BFE02B",
+            fg="black",
+            bd=1,
+            relief="solid",
+            padx=8,
+            pady=2,
+            command=self.set_height_range
+        )
+        self.btn_set_height.pack(side="left", padx=(0, 5))
+        
+        self.btn_clear_height = tk.Button(
+            button_frame,
+            text="✕",
+            font=("Arial", 8),
+            bg="#F0F0F0",
+            fg="#666666",
+            bd=1,
+            relief="solid",
+            width=3,
+            pady=2,
+            command=self.clear_height_range,
+            state="disabled"
+        )
+        self.btn_clear_height.pack(side="left")
+        
+        # Dropdown z sugerowanymi zakresami
+        suggestions_frame = tk.Frame(self.height_frame, bg="#FFFFFF")
+        suggestions_frame.pack(fill="x", pady=(0, 5))
+        
+        tk.Label(
+            suggestions_frame,
+            text="Szybki wybór:",
+            font=("Arial", 8),
+            bg="#FFFFFF",
+            fg="#999999"
+        ).pack(side="left")
+        
+        height_manager = HeightManager()
+        suggested_ranges = height_manager.get_suggested_ranges()
+        range_options = [""] + [desc for _, _, desc in suggested_ranges]
+        
+        self.height_suggestions = ttk.Combobox(
+            suggestions_frame,
+            values=range_options,
+            state="readonly",
+            width=35,
+            font=("Arial", 8)
+        )
+        self.height_suggestions.pack(side="left", padx=(10, 0), fill="x", expand=True)
+        self.height_suggestions.bind("<<ComboboxSelected>>", self.on_height_suggestion_selected)
+        
+        # Status wzrostu
+        self.height_status = tk.Label(
+            self.height_frame,
+            text="",
+            font=("Arial", 8),
+            bg="#FFFFFF",
+            fg="#666666"
+        )
+        self.height_status.pack(anchor="w")
+        
+        # Przechowuj referencję do suggested_ranges
+        self.suggested_ranges = suggested_ranges
         
     def _create_similar_products_section(self):
         """Utwórz sekcję podobnych produktów"""
@@ -324,6 +462,111 @@ class ProductInfoPanel:
         
         if hasattr(self.app, 'product_manager'):
             self.app.product_manager.set_product_color(None, None)
+
+    def set_height_range(self):
+        """Ustaw zakres wzrostu"""
+        try:
+            min_height = int(self.height_min_var.get())
+            max_height = int(self.height_max_var.get())
+            
+            if hasattr(self.app, 'product_manager'):
+                success = self.app.product_manager.data_manager.set_product_height_range(min_height, max_height)
+                if success:
+                    self.btn_clear_height.config(state="normal")
+                    self.update_height_status()
+                else:
+                    messagebox.showerror(
+                        "Błąd", 
+                        f"Nieprawidłowy zakres wzrostu. Dostępne wartości: 82-205 cm"
+                    )
+        except ValueError:
+            messagebox.showerror("Błąd", "Wprowadź prawidłowe wartości liczbowe")
+            
+    def clear_height_range(self):
+        """Wyczyść zakres wzrostu"""
+        print(f"🗑️ Czyszczenie zakresu wzrostu")
+        if hasattr(self.app, 'product_manager'):
+            self.app.product_manager.data_manager.clear_product_height_range()
+            
+        self.height_min_var.set("")
+        self.height_max_var.set("")
+        self.height_suggestions.set("")
+        self.btn_clear_height.config(state="disabled")
+        self.height_status.config(text="")
+        
+    def on_height_suggestion_selected(self, event):
+        """Obsługuj wybór sugerowanego zakresu wzrostu"""
+        selected_desc = self.height_suggestions.get()
+        if not selected_desc:
+            return
+            
+        # Znajdź odpowiadający zakres
+        for min_h, max_h, desc in self.suggested_ranges:
+            if desc == selected_desc:
+                self.height_min_var.set(str(min_h))
+                self.height_max_var.set(str(max_h))
+                self.set_height_range()
+                break
+                
+    def update_height_status(self):
+        """Aktualizuj status wzrostu"""
+        if hasattr(self.app, 'product_manager'):
+            summary = self.app.product_manager.data_manager.get_height_range_summary()
+            count = self.app.product_manager.data_manager.get_selected_heights_count()
+            
+            if summary:
+                self.height_status.config(
+                    text=f"Zakres: {summary} ({count} wartości)",
+                    fg="#008000"
+                )
+            else:
+                self.height_status.config(text="", fg="#666666")
+                
+    def set_height_from_api_data(self):
+        """Ustaw wzrost na podstawie danych z API"""
+        if hasattr(self.app, 'product_manager'):
+            height_range = self.app.product_manager.data_manager.parameters.height_range
+            if height_range:
+                self.height_min_var.set(str(height_range.min_height))
+                self.height_max_var.set(str(height_range.max_height))
+                self.btn_clear_height.config(state="normal")
+                self.update_height_status()
+
+    def update_height_display_from_api(self):
+        """Aktualizuj wyświetlanie wzrostu na podstawie danych z API"""
+        if hasattr(self.app, 'product_manager'):
+            height_range = self.app.product_manager.data_manager.parameters.height_range
+            if height_range:
+                # Ustaw wartości w polach
+                self.height_min_var.set(str(height_range.min_height))
+                self.height_max_var.set(str(height_range.max_height))
+                
+                # Włącz przycisk czyszczenia
+                self.btn_clear_height.config(state="normal")
+                
+                # Aktualizuj status
+                self.update_height_status()
+                
+                # Sprawdź czy pasuje do któregoś z sugerowanych zakresów
+                self._match_suggested_range(height_range)
+                
+                print(f"📋 UI: Ustawiono zakres wzrostu {height_range.min_height}-{height_range.max_height} cm")
+            else:
+                print(f"📋 UI: Brak zakresu wzrostu do ustawienia")
+
+    def _match_suggested_range(self, height_range):
+        """Sprawdź czy zakres pasuje do któregoś z sugerowanych"""
+        if not hasattr(self, 'suggested_ranges'):
+            return
+            
+        for min_h, max_h, desc in self.suggested_ranges:
+            if min_h == height_range.min_height and max_h == height_range.max_height:
+                self.height_suggestions.set(desc)
+                print(f"🎯 Znaleziono pasujący sugerowany zakres: {desc}")
+                return
+                
+        # Jeśli nie ma dokładnego dopasowania, wyczyść dropdown
+        self.height_suggestions.set("")
             
     def set_color_from_remote_id(self, remote_id):
         """Ustaw kolor na podstawie remote_id"""
@@ -481,6 +724,7 @@ class ProductInfoPanel:
         self.lbl_producerdesc_present.config(bg='#dedede')
         self.lbl_product_image.config(text="[Brak obrazu]", image='')
         self.clear_color_selection()
+        self.clear_height_range()
         
         for entry in self.similar_product_entries:
             entry.delete(0, 'end')
