@@ -68,21 +68,7 @@ Pozostałe: Nie używaj opcji canvas. Jeśli w {{opis}} na końcu jest akapit i 
 | Fender                    | Błotnik                  |
 
 
-{{tlum_extras}} =
-
-| Termin          | Tłumaczenie                  |
-|-----------------|------------------------------|
-| BB Standard     | Standard suportu             |
-| Hanger Stanrard | Standard wieszaka przerzutki |
-| Colors          | Kolory                       |
-| Tire Clearance  | Prześwit opon                |
-| Hanger Standard | Standard haka przerzutki     |
-| Travel          | Skok                         |
-| Spring Type     | Rodzaj sprężyny              |
-| Type            | Typ                          |
-
-
-{{specs_instrukcja}} = "Dla każdego 'title' w {{specs}} dodaj tag HTML h3. Jeśli pierwszy 'title' w {{specs}} ma wartość 'Build' to przetłumacz wartość 'title' zgodnie z {{tlum_naglowki}}. Dla kazdego 'title' w {{specs}} dodaj pod nagłówkiem HTML table z wartościami zgodnymi w 'rows'. Nie dodawaj pierwszego wiersza tabeli z nagłówkami tabeli. Niech każdy nowy wiersz HTML tr ma w pierszej komóce HTML th z wartością 'name' przetlumaczoną według wartości w {{tlum}}. W Potem dodaj HTML td i w nim przetłumaczoną na polski 'value' w HTML p. Gramatykę tłumaczenia dopasuj do 'title' dla danego 'value' tak, żeby brzmiało poprawnie po polsku. Jeśli dla danego 'row' znajdziesz 'extra', to każdą wartość dodaj wewnątrz tego samego td jako osobny HTML small wewnątrz tego samego i przetlumacz według {{tlum_extras}}."
+{{specs_instrukcja}} = "Dla każdego 'title' w {{specs}} dodaj tag HTML h3. Jeśli pierwszy 'title' w {{specs}} ma wartość 'Build' to przetłumacz wartość 'title' zgodnie z {{tlum_naglowki}}. Dla kazdego 'title' w {{specs}} dodaj pod nagłówkiem HTML table z wartościami zgodnymi w 'rows'. Nie dodawaj pierwszego wiersza tabeli z nagłówkami tabeli. Niech każdy nowy wiersz HTML tr ma w pierszej komóce HTML th z wartością 'name' przetlumaczoną według wartości w {{tlum}}. Potem dodaj HTML td i w nim przetłumaczoną na polski 'value' w HTML p. Gramatykę tłumaczenia dopasuj do 'title' dla danego 'value' tak, żeby brzmiało poprawnie po polsku. Jeśli 'name' to 'Fork', to w 'value' poszukaj informacji typu '110mm travel'. Jeśli ją znajdziesz, to przetłumacz ją według schematu 'Skok: [wartość w mm]' i dodaj w osobnym tagu HTML small. Jeśli dla danego 'row' znajdziesz 'extra', to pomiń tą treść w wyniku."
 
 
 {{struktura}} =
