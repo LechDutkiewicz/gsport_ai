@@ -66,14 +66,36 @@ class ProductDataManager:
         """Wyodrębnij parametr koloru z danych API"""
         if 'prod_options' not in api_data:
             return
+        
+        prod_options = api_data['prod_options']
+        
+        # Sprawdź czy prod_options to słownik czy lista
+        if isinstance(prod_options, list):
+            # Jeśli to lista, znaczy że nie ma parametrów lub jest pusta
+            return
+        
+        if not isinstance(prod_options, dict):
+            # Jeśli to ani lista, ani słownik, to też kończymy
+            return
             
-        for prod_id, options in api_data['prod_options'].items():
+        # Teraz bezpiecznie iterujemy po słowniku
+        for prod_id, options in prod_options.items():
+            if not isinstance(options, dict):
+                continue
+                
             for opt_id, option in options.items():
+                if not isinstance(option, dict):
+                    continue
+                    
                 if (option.get('name') == 'Kolor dominujący' and 
                     option.get('type') == 'choose'):
                     
-                    for value_id, value_data in option.get('values', {}).items():
-                        if value_data.get('selected'):
+                    values = option.get('values', {})
+                    if not isinstance(values, dict):
+                        continue
+                        
+                    for value_id, value_data in values.items():
+                        if isinstance(value_data, dict) and value_data.get('selected'):
                             self.parameters.color = value_data.get('name', '')
                             self.parameters.color_remote_id = str(value_id)
                             return
