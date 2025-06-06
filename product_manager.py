@@ -62,7 +62,9 @@ class ProductManager:
             # Ustaw dane w managerze
             self.data_manager.set_product_data(api_data)
             self.data_manager.set_producer_data(api_data)
+            self.data_manager.extract_original_parameters(api_data)
             self.data_manager.extract_color_parameter(api_data)
+            self.data_manager.extract_height_parameter(api_data)
             
             # Aktualizuj UI
             self._update_ui_with_product_data()
@@ -96,6 +98,10 @@ class ProductManager:
             self.app.product_info_panel.set_color_from_remote_id(
                 self.data_manager.parameters.color_remote_id
             )
+
+        # Ustaw wzrost jeśli został wyodrębniony
+        if self.data_manager.parameters.height_range:
+            self.app.product_info_panel.update_height_display_from_api()
         
         # Wyświetl opis produktu
         self.app.content_area.load_html_content(
