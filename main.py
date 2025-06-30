@@ -57,15 +57,12 @@ class ProductManagerApp:
         
     def setup_bindings(self):
         """Skonfiguruj powiązania zdarzeń"""
-        # Auto-ładowanie produktu
+        # Auto-ładowanie produktu (Enter = normalne ładowanie)
         self.product_info_panel.input_product_link.bind(
             '<Return>', 
             lambda e: self.product_manager.load_product_data()
         )
-        self.product_info_panel.input_product_link.bind(
-            '<FocusOut>', 
-            lambda e: self.on_product_input_change()
-        )
+        # Usuń auto-ładowanie na FocusOut - użytkownik sam wybierze przycisk
         
         # Śledzenie zmian w polach tekstowych
         self.content_area.text_ai_long.bind(
