@@ -51,10 +51,18 @@ class XMLBuilder:
             '<?xml version="1.0" encoding="UTF-8"?>',
             f'<products xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1" date="{now}">',
             '    <item>',
-            f'        <prod_id>{product_id}</prod_id>',
-            f'        <prod_shortdesc_pl><![CDATA[{data_manager.generated_descriptions.short}]]></prod_shortdesc_pl>',
-            f'        <prod_desc_pl><![CDATA[{data_manager.generated_descriptions.long}]]></prod_desc_pl>'
+            f'        <prod_id>{product_id}</prod_id>'
         ]
+        
+        # Dodaj krótki opis tylko jeśli nie jest pusty
+        short_desc = data_manager.generated_descriptions.short.strip()
+        if short_desc:
+            xml_parts.append(f'        <prod_shortdesc_pl><![CDATA[{short_desc}]]></prod_shortdesc_pl>')
+        
+        # Dodaj długi opis tylko jeśli nie jest pusty
+        long_desc = data_manager.generated_descriptions.long.strip()
+        if long_desc:
+            xml_parts.append(f'        <prod_desc_pl><![CDATA[{long_desc}]]></prod_desc_pl>')
         
         # Przygotuj parametry informacyjne (info_options)
         has_info_options = False
@@ -154,10 +162,18 @@ class XMLBuilder:
         for product_id in product_ids:
             xml_parts.extend([
                 '    <item>',
-                f'        <prod_id>{product_id}</prod_id>',
-                f'        <prod_shortdesc_pl><![CDATA[{data_manager.generated_descriptions.short}]]></prod_shortdesc_pl>',
-                f'        <prod_desc_pl><![CDATA[{data_manager.generated_descriptions.long}]]></prod_desc_pl>'
+                f'        <prod_id>{product_id}</prod_id>'
             ])
+            
+            # Dodaj krótki opis tylko jeśli nie jest pusty
+            short_desc = data_manager.generated_descriptions.short.strip()
+            if short_desc:
+                xml_parts.append(f'        <prod_shortdesc_pl><![CDATA[{short_desc}]]></prod_shortdesc_pl>')
+            
+            # Dodaj długi opis tylko jeśli nie jest pusty
+            long_desc = data_manager.generated_descriptions.long.strip()
+            if long_desc:
+                xml_parts.append(f'        <prod_desc_pl><![CDATA[{long_desc}]]></prod_desc_pl>')
             
             # Przygotuj parametry informacyjne (info_options)
             has_info_options = False
