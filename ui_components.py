@@ -94,7 +94,49 @@ class ProductInfoPanel:
         
         # Pole input
         self.input_product_link = tk.Entry(inner, width=35, font=("Arial", 11))
-        self.input_product_link.pack(fill="x", pady=(0, 15))
+        self.input_product_link.pack(fill="x", pady=(0, 10))
+        
+        # Przyciski ładowania
+        buttons_frame = tk.Frame(inner, bg="#FFFFFF")
+        buttons_frame.pack(fill="x", pady=(0, 15))
+        
+        self.btn_load_normal = tk.Button(
+            buttons_frame,
+            text="Załaduj produkt",
+            font=("Arial", 9),
+            bg="#222645",
+            fg="white",
+            bd=1,
+            relief="solid",
+            padx=10,
+            pady=3,
+            command=self.app.product_manager.load_product_data
+        )
+        self.btn_load_normal.pack(side="left", padx=(0, 5))
+        
+        self.btn_load_preserve = tk.Button(
+            buttons_frame,
+            text="Załaduj zachowując AI",
+            font=("Arial", 9),
+            bg="#BFE02B",
+            fg="black",
+            bd=1,
+            relief="solid",
+            padx=10,
+            pady=3,
+            command=self.app.product_manager.load_product_data_preserve_ai
+        )
+        self.btn_load_preserve.pack(side="left")
+
+        # Opis przycisków
+        help_label = tk.Label(
+            inner,
+            text="Enter = Załaduj produkt  |  Przyciski = wybierz tryb ładowania",
+            font=("Arial", 8),
+            fg="#999999",
+            bg="#FFFFFF"
+        )
+        help_label.pack(pady=(5, 0))
         
         # Ramka obrazka
         self.image_frame = tk.Frame(
@@ -198,8 +240,9 @@ class ProductInfoPanel:
         )
         self.color_preview.pack(side="left", padx=(0, 10))
         
-        # Dropdown
-        color_options = [""] + [f"{data['name']}" for data in self.colors.values()]
+        # Dropdown - posortowany alfabetycznie
+        sorted_colors = sorted(self.colors.values(), key=lambda x: x['name'])
+        color_options = [""] + [f"{data['name']}" for data in sorted_colors]
         self.color_dropdown = ttk.Combobox(
             dropdown_frame,
             values=color_options,
@@ -228,10 +271,12 @@ class ProductInfoPanel:
 
     def _create_height_selector(self, parent):
         """Utwórz selektor zakresu wzrostu"""
+        print("🔧 Tworzenie selektora wzrostu...")
+
         from height_manager import HeightManager
         
         self.height_frame = tk.Frame(parent, bg="#FFFFFF")
-        self.height_frame.pack(fill="x", pady=(0, 10))
+        self.height_frame.pack(fill="x", pady=(0, 15))
         
         height_label = tk.Label(
             self.height_frame,
@@ -334,22 +379,62 @@ class ProductInfoPanel:
             font=("Arial", 8),
             bg="#FFFFFF",
             fg="#999999"
+        ).pack(anchor="w", pady=(0, 5))
+        
+        # Kategoria
+        category_frame = tk.Frame(suggestions_frame, bg="#FFFFFF")
+        category_frame.pack(fill="x", pady=(0, 3))
+        
+        tk.Label(
+            category_frame,
+            text="Kategoria:",
+            font=("Arial", 8),
+            bg="#FFFFFF",
+            fg="#666666",
+            width=10,
+            anchor="w"
         ).pack(side="left")
         
         height_manager = HeightManager()
-        suggested_ranges = height_manager.get_suggested_ranges()
-        range_options = [""] + [desc for _, _, desc in suggested_ranges]
+        categories = [""] + height_manager.get_category_list()
         
-        self.height_suggestions = ttk.Combobox(
-            suggestions_frame,
-            values=range_options,
+        self.height_category = ttk.Combobox(
+            category_frame,
+            values=categories,
+            state="readonly",
+            width=20,
+            font=("Arial", 8)
+        )
+        self.height_category.pack(side="left", padx=(5, 0), fill="x", expand=True)
+        self.height_category.bind("<<ComboboxSelected>>", self.on_category_selected)
+        
+        # Rozmiar (drugi rząd)
+        size_frame = tk.Frame(suggestions_frame, bg="#FFFFFF")
+        size_frame.pack(fill="x", pady=(0, 3))
+        
+        tk.Label(
+            size_frame,
+            text="Rozmiar:",
+            font=("Arial", 8),
+            bg="#FFFFFF",
+            fg="#666666",
+            width=10,
+            anchor="w"
+        ).pack(side="left")
+        
+        self.height_size = ttk.Combobox(
+            size_frame,
+            values=[""],
             state="readonly",
             width=35,
             font=("Arial", 8)
         )
-        self.height_suggestions.pack(side="left", padx=(10, 0), fill="x", expand=True)
-        self.height_suggestions.bind("<<ComboboxSelected>>", self.on_height_suggestion_selected)
+        self.height_size.pack(side="left", padx=(5, 0), fill="x", expand=True)
+        self.height_size.bind("<<ComboboxSelected>>", self.on_size_selected)
         
+        # Przechowuj referencję do height_manager
+        self.height_manager = height_manager
+
         # Status wzrostu
         self.height_status = tk.Label(
             self.height_frame,
@@ -359,9 +444,8 @@ class ProductInfoPanel:
             fg="#666666"
         )
         self.height_status.pack(anchor="w")
-        
-        # Przechowuj referencję do suggested_ranges
-        self.suggested_ranges = suggested_ranges
+
+        print("✅ Selektor wzrostu utworzony pomyślnie")
         
     def _create_similar_products_section(self):
         """Utwórz sekcję podobnych produktów"""
@@ -485,14 +569,23 @@ class ProductInfoPanel:
     def clear_height_range(self):
         """Wyczyść zakres wzrostu"""
         print(f"🗑️ Czyszczenie zakresu wzrostu")
+        
         if hasattr(self.app, 'product_manager'):
             self.app.product_manager.data_manager.clear_product_height_range()
             
-        self.height_min_var.set("")
-        self.height_max_var.set("")
-        self.height_suggestions.set("")
-        self.btn_clear_height.config(state="disabled")
-        self.height_status.config(text="")
+        # Sprawdź czy elementy UI istnieją przed ich użyciem
+        if hasattr(self, 'height_min_var'):
+            self.height_min_var.set("")
+        if hasattr(self, 'height_max_var'):
+            self.height_max_var.set("")
+        if hasattr(self, 'height_category'):
+            self.height_category.set("")
+        if hasattr(self, 'height_size'):
+            self.height_size.set("")
+        if hasattr(self, 'btn_clear_height'):
+            self.btn_clear_height.config(state="disabled")
+        if hasattr(self, 'height_status'):
+            self.height_status.config(text="")
         
     def on_height_suggestion_selected(self, event):
         """Obsługuj wybór sugerowanego zakresu wzrostu"""
@@ -510,6 +603,9 @@ class ProductInfoPanel:
                 
     def update_height_status(self):
         """Aktualizuj status wzrostu"""
+        if not hasattr(self, 'height_status'):
+            return
+            
         if hasattr(self.app, 'product_manager'):
             summary = self.app.product_manager.data_manager.get_height_range_summary()
             count = self.app.product_manager.data_manager.get_selected_heights_count()
@@ -548,7 +644,7 @@ class ProductInfoPanel:
                 self.update_height_status()
                 
                 # Sprawdź czy pasuje do któregoś z sugerowanych zakresów
-                self._match_suggested_range(height_range)
+                self._match_suggested_range_new(height_range)
                 
                 print(f"📋 UI: Ustawiono zakres wzrostu {height_range.min_height}-{height_range.max_height} cm")
             else:
@@ -567,6 +663,62 @@ class ProductInfoPanel:
                 
         # Jeśli nie ma dokładnego dopasowania, wyczyść dropdown
         self.height_suggestions.set("")
+
+    def on_category_selected(self, event):
+        """Obsługuj wybór kategorii"""
+        selected_category = self.height_category.get()
+        
+        if not selected_category:
+            # Jeśli pusta kategoria, wyczyść rozmiary
+            self.height_size.config(values=[""])
+            self.height_size.set("")
+            return
+            
+        # Pobierz rozmiary dla wybranej kategorii
+        ranges = self.height_manager.get_ranges_for_category(selected_category)
+        size_options = [""] + [desc for _, _, desc in ranges]
+        
+        # Aktualizuj dropdown rozmiarów
+        self.height_size.config(values=size_options)
+        self.height_size.set("")  # Wyczyść wybór
+        
+        print(f"📋 Wybrano kategorię: {selected_category} ({len(ranges)} rozmiarów)")
+
+    def on_size_selected(self, event):
+        """Obsługuj wybór rozmiaru"""
+        selected_category = self.height_category.get()
+        selected_size = self.height_size.get()
+        
+        if not selected_category or not selected_size:
+            return
+            
+        # Znajdź odpowiadający zakres
+        ranges = self.height_manager.get_ranges_for_category(selected_category)
+        
+        for min_h, max_h, desc in ranges:
+            if desc == selected_size:
+                self.height_min_var.set(str(min_h))
+                self.height_max_var.set(str(max_h))
+                self.set_height_range()
+                print(f"🎯 Ustawiono preset: {desc}")
+                break
+
+    def _match_suggested_range_new(self, height_range):
+        """Sprawdź czy zakres pasuje do któregoś z presetów (nowa wersja)"""
+        all_ranges = self.height_manager.get_suggested_ranges()
+        
+        for category, ranges in all_ranges.items():
+            for min_h, max_h, desc in ranges:
+                if min_h == height_range.min_height and max_h == height_range.max_height:
+                    self.height_category.set(category)
+                    self.on_category_selected(None)  # Załaduj rozmiary dla kategorii
+                    self.height_size.set(desc)
+                    print(f"🎯 Znaleziono pasujący preset: {category} -> {desc}")
+                    return
+                    
+        # Jeśli nie ma dopasowania, wyczyść
+        self.height_category.set("")
+        self.height_size.set("")
             
     def set_color_from_remote_id(self, remote_id):
         """Ustaw kolor na podstawie remote_id"""
