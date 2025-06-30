@@ -121,7 +121,7 @@ class ProductManagerApp:
         self.product_info_panel.clear_all_fields()
         self.content_area.clear_all_fields()
         self.control_panel.lbl_cost.config(text="")
-        self.disable_update_button()
+        # self.disable_update_button()
         
     def run(self):
         """Uruchom aplikację"""
