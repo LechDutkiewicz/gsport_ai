@@ -211,20 +211,50 @@ class HeightManager:
             
         return None
         
-    def get_suggested_ranges(self) -> List[Tuple[int, int, str]]:
+    def get_suggested_ranges(self) -> Dict[str, List[Tuple[int, int, str]]]:
         """
-        Pobierz sugerowane zakresy wzrostu
+        Pobierz presety wzrostu pogrupowane według kategorii
         
         Returns:
-            Lista tupli (min, max, nazwa)
+            Słownik kategorii z listami tupli (min, max, nazwa)
         """
-        return [
-            (82, 95, "Bardzo małe dzieci (82-95 cm)"),
-            (95, 110, "Małe dzieci (95-110 cm)"),
-            (110, 130, "Dzieci (110-130 cm)"),
-            (130, 150, "Młodzież (130-150 cm)"),
-            (150, 170, "Dorośli niskiego wzrostu (150-170 cm)"),
-            (170, 185, "Dorośli średniego wzrostu (170-185 cm)"),
-            (185, 205, "Dorośli wysokiego wzrostu (185-205 cm)"),
-            (82, 205, "Wszystkie dostępne wzrosty (82-205 cm)")
-        ]
+        return {
+            "Woom": [
+                (82, 100, "woom 12\" (82-100 cm)"),
+                (95, 110, "woom 14\" (95-110 cm)"),
+                (105, 120, "woom 16\" (105-120 cm)"),
+                (115, 130, "woom 20\" (115-130 cm)"),
+                (125, 145, "woom 24\" (125-145 cm)"),
+                (140, 165, "woom 26\" (140-165 cm)")
+            ],
+            "KTM MTB Full": [
+                (150, 164, "KTM MTB full S(38) (150-164 cm)"),
+                (165, 174, "KTM MTB full M(43) (165-174 cm)"),
+                (175, 184, "KTM MTB full L(48) (175-184 cm)"),
+                (185, 194, "KTM MTB full XL(53) (185-194 cm)")
+            ],
+            "KTM MTB": [
+                (140, 149, "KTM MTB XS(32) (140-149 cm)"),
+                (150, 164, "KTM MTB S(35-38) (150-164 cm)"),
+                (165, 172, "KTM MTB M(42/43) (165-172 cm)"),
+                (172, 182, "KTM MTB L(47/48) (172-182 cm)"),
+                (182, 192, "KTM MTB XL(52/53) (182-192 cm)"),
+                (192, 200, "KTM MTB XXL(57) (192-200 cm)")
+            ],
+            "KTM Trekking": [
+                (150, 164, "KTM trekking XS(43) (150-164 cm)"),
+                (165, 169, "KTM trekking S(46) (165-169 cm)"),
+                (170, 176, "KTM trekking M(51) (170-176 cm)"),
+                (176, 187, "KTM trekking L(56) (176-187 cm)"),
+                (187, 194, "KTM trekking XL(60) (187-194 cm)"),
+                (195, 200, "KTM trekking XXL(63) (195-200 cm)")
+            ]
+        }
+
+    def get_category_list(self) -> List[str]:
+        """Pobierz listę dostępnych kategorii"""
+        return list(self.get_suggested_ranges().keys())
+
+    def get_ranges_for_category(self, category: str) -> List[Tuple[int, int, str]]:
+        """Pobierz zakresy dla określonej kategorii"""
+        return self.get_suggested_ranges().get(category, [])
