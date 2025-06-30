@@ -71,6 +71,92 @@ class ProductManager:
             
         except Exception as e:
             messagebox.showerror("Błąd", f"Nie udało się pobrać danych produktu: {str(e)}")
+
+    def load_product_data_preserve_ai(self):
+        """Załaduj dane produktu zachowując wygenerowane opisy AI"""
+        input_text = self.app.product_info_panel.input_product_link.get().strip()
+        if not input_text:
+            return
+            
+        product_id = extract_product_id(input_text)
+        if not product_id:
+            return
+            
+        # Zachowaj wygenerowane opisy AI przed czyszczeniem
+        preserved_long_desc = self.data_manager.generated_descriptions.long
+        preserved_short_desc = self.data_manager.generated_descriptions.short
+        
+        # Wyczyść wszystkie pola OPRÓCZ opisów AI
+        self._clear_fields_except_ai()
+        
+        self.current_product_id = product_id
+        self.data_manager.product_data.product_id = product_id
+        
+        try:
+            # Pobierz dane produktu
+            api_data = self.gsport_client.get_product_data(product_id)
+            
+            if not api_data:
+                messagebox.showinfo("Brak danych", "Nie znaleziono danych dla podanego ID.")
+                return
+                
+            # Ustaw dane w managerze
+            self.data_manager.set_product_data(api_data)
+            self.data_manager.set_producer_data(api_data)
+            self.data_manager.extract_original_parameters(api_data)
+            self.data_manager.extract_color_parameter(api_data)
+            self.data_manager.extract_height_parameter(api_data)
+            
+            # Przywróć zachowane opisy AI
+            self.data_manager.set_generated_description('long', preserved_long_desc)
+            self.data_manager.set_generated_description('short', preserved_short_desc)
+            
+            # Aktualizuj UI
+            self._update_ui_with_product_data()
+            
+            # Przywróć opisy AI w UI
+            if preserved_long_desc:
+                self.app.content_area.set_text_content('long', preserved_long_desc)
+            if preserved_short_desc:
+                self.app.content_area.set_text_content('short', preserved_short_desc)
+                
+            # Włącz przycisk aktualizacji jeśli są opisy AI
+            if preserved_long_desc or preserved_short_desc:
+                self.app.enable_update_button()
+                
+            print(f"✅ Załadowano produkt {product_id} zachowując opisy AI")
+            
+        except Exception as e:
+            messagebox.showerror("Błąd", f"Nie udało się pobrać danych produktu: {str(e)}")
+            
+    def _clear_fields_except_ai(self):
+        """Wyczyść pola z wyjątkiem opisów AI"""
+        # Wyczyść panel informacji o produkcie
+        self.app.product_info_panel.lbl_prod_name.config(text="[Nazwa produktu]")
+        self.app.product_info_panel.lbl_producer_present.config(bg='#dedede', text="Producent")
+        self.app.product_info_panel.lbl_producerdesc_present.config(bg='#dedede')
+        self.app.product_info_panel.lbl_product_image.config(text="[Brak obrazu]", image='')
+        self.app.product_info_panel.clear_color_selection()
+        self.app.product_info_panel.clear_height_range()
+        
+        # Wyczyść podobne produkty
+        for entry in self.app.product_info_panel.similar_product_entries:
+            entry.delete(0, 'end')
+            
+        # Wyczyść opis oryginalny i specyfikacje
+        self.app.content_area.load_html_content('html_original_desc', "")
+        self.app.content_area.load_html_content('html_spec_json', "")
+        self.app.content_area.load_html_content('html_spec_html', "")
+        
+        # Wyczyść dane w managerze (oprócz opisów AI)
+        preserved_long = self.data_manager.generated_descriptions.long
+        preserved_short = self.data_manager.generated_descriptions.short
+        
+        self.data_manager.clear_all_data()
+        
+        # Przywróć opisy AI
+        self.data_manager.set_generated_description('long', preserved_long)
+        self.data_manager.set_generated_description('short', preserved_short)
             
     def _update_ui_with_product_data(self):
         """Aktualizuj UI z danymi produktu"""
