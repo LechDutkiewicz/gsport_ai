@@ -1002,14 +1002,26 @@ class ControlPanel:
         )
         save_label.pack(anchor="w", pady=(0, 5))
         
+        # Przyciski w jednym rzędzie
+        buttons_row = tk.Frame(save_frame, bg="#FFFFFF")
+        buttons_row.pack()
+        
+        self.btn_load_original = ttk.Button(
+            buttons_row,
+            text="Wczytaj opis oryginalny",
+            command=self.app.product_manager.load_original_description,
+            style='Secondary.TButton'
+        )
+        self.btn_load_original.pack(side="left", padx=(0, 10))
+        
         self.btn_update = ttk.Button(
-            save_frame,
+            buttons_row,
             text="Zapisz w sklepie",
             command=self.app.product_manager.update_products,
             style='Success.TButton',
-            state=tk.DISABLED
+            state=tk.NORMAL
         )
-        self.btn_update.pack()
+        self.btn_update.pack(side="left")
         
     def _create_cost_display(self, parent):
         """Utwórz wyświetlanie kosztów"""
