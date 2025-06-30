@@ -138,6 +138,7 @@ venv.bak/
 config.py
 prompts/trash
 backup*
+output
 
 # Spyder project settings
 .spyderproject
