@@ -121,8 +121,8 @@ class ProductManager:
                 self.app.content_area.set_text_content('short', preserved_short_desc)
                 
             # Włącz przycisk aktualizacji jeśli są opisy AI
-            if preserved_long_desc or preserved_short_desc:
-                self.app.enable_update_button()
+            # if preserved_long_desc or preserved_short_desc:
+                # self.app.enable_update_button()
                 
             print(f"✅ Załadowano produkt {product_id} zachowując opisy AI")
             
@@ -257,7 +257,7 @@ class ProductManager:
                 self.app.update_cost_display(f"Koszt: {cost:.5f}¢ USD")
                 
                 # Włącz przycisk aktualizacji
-                self.app.enable_update_button()
+                # self.app.enable_update_button()
                 
                 print(f"Użyto pliku z promptem: {result.get('prompt_file', 'unknown')}")
                 
@@ -266,6 +266,37 @@ class ProductManager:
                 
         except Exception as e:
             messagebox.showerror("Błąd", f"Wystąpił błąd podczas generowania opisu: {str(e)}")
+
+    def load_original_description(self):
+        """Wczytaj oryginalny opis produktu do edytora AI"""
+        if not self.data_manager.product_data.description:
+            messagebox.showwarning("Błąd", "Brak oryginalnego opisu produktu")
+            return
+            
+        original_desc = self.data_manager.product_data.description.strip()
+        
+        if not original_desc:
+            messagebox.showwarning("Błąd", "Oryginalny opis produktu jest pusty")
+            return
+            
+        # Wczytaj oryginalny opis do długiego opisu AI
+        self.app.content_area.set_text_content('long', original_desc)
+        
+        # Zapisz w managerze
+        self.data_manager.set_generated_description('long', original_desc)
+        
+        # Wyczyść krótki opis
+        self.app.content_area.set_text_content('short', '')
+        self.data_manager.set_generated_description('short', '')
+        
+        print(f"📋 Wczytano oryginalny opis produktu do edytora ({len(original_desc)} znaków)")
+        
+        messagebox.showinfo(
+            "Sukces", 
+            f"Wczytano oryginalny opis produktu do edytora.\n"
+            f"Długość: {len(original_desc)} znaków\n\n"
+            f"Możesz teraz edytować opis i zapisać w sklepie."
+        )
             
     def update_products(self):
         """Aktualizuj produkty w systemie"""
@@ -277,9 +308,18 @@ class ProductManager:
         long_desc = self.app.content_area.get_text_content('long')
         short_desc = self.app.content_area.get_text_content('short')
         
-        if not long_desc:
-            messagebox.showwarning("Błąd", "Brak opisu do zapisania")
-            return
+        # Walidacja
+        if not long_desc.strip():
+            response = messagebox.askyesno(
+                "Brak długiego opisu", 
+                "Długi opis jest pusty. Czy na pewno chcesz zapisać produkt bez opisu?\n\n"
+                "Możesz:\n"
+                "• Wygenerować opis AI\n"
+                "• Wczytać opis oryginalny\n"
+                "• Napisać własny opis"
+            )
+            if not response:
+                return
             
         # Aktualizuj dane w managerze
         self.data_manager.set_generated_description('long', long_desc)
@@ -322,6 +362,39 @@ class ProductManager:
         
     def _update_single_product(self, product_id: str) -> bool:
         """Aktualizuj pojedynczy produkt"""
+        
+        # DODAJ DEBUG INFO:
+        print(f"\n📤 GENEROWANIE XML DLA PRODUKTU {product_id}:")
+        
+        # Debug opisów
+        long_desc = self.data_manager.generated_descriptions.long.strip()
+        short_desc = self.data_manager.generated_descriptions.short.strip()
+        
+        if long_desc:
+            print(f"   - Długi opis: BĘDZIE NADPISANY ({len(long_desc)} znaków)")
+        else:
+            print(f"   - Długi opis: ZOSTANIE BEZ ZMIAN (pusty)")
+            
+        if short_desc:
+            print(f"   - Krótki opis: BĘDZIE NADPISANY ({len(short_desc)} znaków)")
+        else:
+            print(f"   - Krótki opis: ZOSTANIE BEZ ZMIAN (pusty)")
+        
+        # Debug parametrów
+        print(f"   - Info options: {len(self.data_manager.original_info_options)} oryginalnych")
+        if self.data_manager.height_manager.height_range:
+            height_count = self.data_manager.get_selected_heights_count()
+            height_summary = self.data_manager.get_height_range_summary()
+            print(f"   - Wzrost: {height_count} nowych wartości ({height_summary})")
+        else:
+            print(f"   - Wzrost: BRAK nowych wartości")
+        print(f"   - Options: {len(self.data_manager.original_options)} oryginalnych")
+        if self.data_manager.parameters.color:
+            print(f"   - Kolor: {self.data_manager.parameters.color}")
+        else:
+            print(f"   - Kolor: BRAK zmiany")
+        print()
+        
         # Zbuduj XML
         xml_content = XMLBuilder.build_product_xml(product_id, self.data_manager)
         
