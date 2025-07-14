@@ -227,25 +227,33 @@ class HeightManager:
                 (125, 145, "woom 24\" (125-145 cm)"),
                 (140, 165, "woom 26\" (140-165 cm)")
             ],
+            "Puky": [
+                (95, 115, "ls-pro 14\" (95-115 cm)"),
+                (100, 120, "ls-pro 16\" (100-120 cm)"),
+                (105, 125, "ls-pro 18\" (105-125 cm)"),
+                (115, 138, "ls-pro 20\" (115-138 cm)"),
+                (130, 150, "ls-pro 24\" (130-150 cm)"),
+                (140, 160, "ls-pro 26\" (140-160 cm)")
+            ],
             "KTM MTB Full": [
-                (150, 164, "KTM MTB full S(38) (150-164 cm)"),
+                (148, 164, "KTM MTB full S(38) (148-164 cm)"),
                 (165, 174, "KTM MTB full M(43) (165-174 cm)"),
                 (175, 184, "KTM MTB full L(48) (175-184 cm)"),
                 (185, 194, "KTM MTB full XL(53) (185-194 cm)")
             ],
             "KTM MTB": [
                 (140, 149, "KTM MTB XS(32) (140-149 cm)"),
-                (150, 164, "KTM MTB S(35-38) (150-164 cm)"),
-                (165, 172, "KTM MTB M(42/43) (165-172 cm)"),
-                (172, 182, "KTM MTB L(47/48) (172-182 cm)"),
+                (149, 164, "KTM MTB S(35-38) (149-164 cm)"),
+                (165, 173, "KTM MTB M(42/43) (165-173 cm)"),
+                (173, 182, "KTM MTB L(47/48) (173-182 cm)"),
                 (182, 192, "KTM MTB XL(52/53) (182-192 cm)"),
                 (192, 200, "KTM MTB XXL(57) (192-200 cm)")
             ],
             "KTM Trekking": [
-                (150, 164, "KTM trekking XS(43) (150-164 cm)"),
+                (148, 164, "KTM trekking XS(43) (148-164 cm)"),
                 (165, 169, "KTM trekking S(46) (165-169 cm)"),
-                (170, 176, "KTM trekking M(51) (170-176 cm)"),
-                (176, 187, "KTM trekking L(56) (176-187 cm)"),
+                (170, 177, "KTM trekking M(51) (170-177 cm)"),
+                (177, 187, "KTM trekking L(56) (177-187 cm)"),
                 (187, 194, "KTM trekking XL(60) (187-194 cm)"),
                 (195, 200, "KTM trekking XXL(63) (195-200 cm)")
             ]
