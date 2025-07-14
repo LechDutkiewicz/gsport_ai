@@ -1,4 +1,5 @@
 # main.py - Refaktoryzowany
+import os
 import tkinter as tk
 from tkinter import ttk
 from product_manager import ProductManager
@@ -6,6 +7,16 @@ from prompt_editor import PromptEditor, PromptManager
 from ui_components import ProductInfoPanel, ControlPanel, HTMLPreviewManager, SyntaxHighlighter
 from content_area import ContentArea
 from styles import StyleManager
+import sys
+if sys.platform == "win32":
+    try:
+        # Ustaw AppUserModelID dla Windows (żeby ikona działała w pasku zadań)
+        import ctypes
+        myappid = 'gsport.redaktor.opisow.2.1'  # Unikalny identyfikator aplikacji
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+    except:
+        pass  # Jeśli nie działa, po prostu ignoruj
+
 
 class ProductManagerApp:
     """Główna aplikacja do zarządzania opisami produktów"""
@@ -30,11 +41,25 @@ class ProductManagerApp:
     def setup_window(self):
         """Skonfiguruj główne okno"""
         self.root.configure(background="#FFFFFF", padx=0, pady=0)
-        self.root.title("GSPORT Redaktor Opisów 2.0")
+        self.root.title("GSPORT Redaktor Opisów 2.1")
         self.root.geometry("{}x{}+0+0".format(
             self.root.winfo_screenwidth(), 
             self.root.winfo_screenheight()
         ))
+
+        # DODAJ IKONĘ:
+        try:
+            # Ścieżka do ikony
+            icon_path = os.path.join(os.path.dirname(__file__), "assets", "app_icon.ico")
+            
+            if os.path.exists(icon_path):
+                self.root.iconbitmap(icon_path)
+                print(f"✅ Załadowano ikonę: {icon_path}")
+            else:
+                print(f"⚠️ Nie znaleziono ikony: {icon_path}")
+                
+        except Exception as e:
+            print(f"❌ Błąd ładowania ikony: {e}")
         
     def create_interface(self):
         """Utwórz interfejs użytkownika"""
