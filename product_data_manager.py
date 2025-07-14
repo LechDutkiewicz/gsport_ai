@@ -9,6 +9,7 @@ class ProductData:
     product_id: str = ""
     name: str = ""
     description: str = ""
+    short_description: str = ""
     image: str = ""
 
 @dataclass
@@ -64,10 +65,13 @@ class ProductDataManager:
         self.original_options: List[OriginalOption] = []
         
     def set_product_data(self, api_data: Dict[str, Any]) -> None:
+
+        print(api_data)
         """Ustaw dane produktu z odpowiedzi API"""
         self.product_data = ProductData(
             name=api_data.get("prod_name", "Brak nazwy"),
             description=api_data.get("prod_desclong", "Brak opisu"),
+            short_description=api_data.get("prod_desc", ""),
             image=api_data.get("prod_img_src", "")
         )
         

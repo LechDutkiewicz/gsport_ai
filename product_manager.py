@@ -65,7 +65,12 @@ class ProductManager:
             self.data_manager.extract_original_parameters(api_data)
             self.data_manager.extract_color_parameter(api_data)
             self.data_manager.extract_height_parameter(api_data)
-            
+
+            # DODAJ DEBUG INFO:
+            print(f"📋 Pobrano opisy produktu:")
+            print(f"   - Długi opis: {len(self.data_manager.product_data.description)} znaków")
+            print(f"   - Krótki opis: {len(self.data_manager.product_data.short_description)} znaków")
+                        
             # Aktualizuj UI
             self._update_ui_with_product_data()
             
@@ -110,7 +115,12 @@ class ProductManager:
             # Przywróć zachowane opisy AI
             self.data_manager.set_generated_description('long', preserved_long_desc)
             self.data_manager.set_generated_description('short', preserved_short_desc)
-            
+
+            # DODAJ DEBUG INFO:
+            print(f"📋 Pobrano opisy produktu:")
+            print(f"   - Długi opis: {len(self.data_manager.product_data.description)} znaków")
+            print(f"   - Krótki opis: {len(self.data_manager.product_data.short_description)} znaków")
+                        
             # Aktualizuj UI
             self._update_ui_with_product_data()
             
@@ -269,34 +279,62 @@ class ProductManager:
 
     def load_original_description(self):
         """Wczytaj oryginalny opis produktu do edytora AI"""
-        if not self.data_manager.product_data.description:
-            messagebox.showwarning("Błąd", "Brak oryginalnego opisu produktu")
+        original_long_desc = self.data_manager.product_data.description.strip()
+        original_short_desc = self.data_manager.product_data.short_description.strip()
+        
+        if not original_long_desc and not original_short_desc:
+            messagebox.showwarning("Błąd", "Brak oryginalnych opisów produktu")
             return
             
-        original_desc = self.data_manager.product_data.description.strip()
+        # Wczytaj oryginalny długi opis (jeśli istnieje)
+        if original_long_desc:
+            self.app.content_area.set_text_content('long', original_long_desc)
+            self.data_manager.set_generated_description('long', original_long_desc)
+        else:
+            self.app.content_area.set_text_content('long', '')
+            self.data_manager.set_generated_description('long', '')
         
-        if not original_desc:
-            messagebox.showwarning("Błąd", "Oryginalny opis produktu jest pusty")
-            return
-            
-        # Wczytaj oryginalny opis do długiego opisu AI
-        self.app.content_area.set_text_content('long', original_desc)
+        # Wczytaj oryginalny krótki opis (jeśli istnieje)
+        if original_short_desc:
+            # Sprawdź czy komentarz już istnieje
+            if not original_short_desc.startswith("<!-- no-clear-classes -->"):
+                # Dodaj komentarz no-clear-classes na początku
+                modified_short_desc = f"<!-- no-clear-classes -->{original_short_desc}"
+                print(f"✅ Dodano <!-- no-clear-classes --> do krótkiego opisu")
+            else:
+                modified_short_desc = original_short_desc
+                print(f"ℹ️ Komentarz <!-- no-clear-classes --> już istnieje")
         
-        # Zapisz w managerze
-        self.data_manager.set_generated_description('long', original_desc)
+            self.app.content_area.set_text_content('short', modified_short_desc)
+            self.data_manager.set_generated_description('short', modified_short_desc)
         
-        # Wyczyść krótki opis
-        self.app.content_area.set_text_content('short', '')
-        self.data_manager.set_generated_description('short', '')
+            print(f"✅ Dodano <!-- no-clear-classes --> do krótkiego opisu")
+        else:
+            self.app.content_area.set_text_content('short', '')
+            self.data_manager.set_generated_description('short', '')
         
-        print(f"📋 Wczytano oryginalny opis produktu do edytora ({len(original_desc)} znaków)")
+        print(f"📋 Wczytano oryginalne opisy produktu:")
+        print(f"   - Długi opis: {len(original_long_desc)} znaków")
+        if original_short_desc:
+            final_short_length = len(original_short_desc) + len("<!-- no-clear-classes -->")
+            print(f"   - Krótki opis: {len(original_short_desc)} znaków → {final_short_length} znaków (+ komentarz)")
+        else:
+            print(f"   - Krótki opis: brak")
         
-        messagebox.showinfo(
-            "Sukces", 
-            f"Wczytano oryginalny opis produktu do edytora.\n"
-            f"Długość: {len(original_desc)} znaków\n\n"
-            f"Możesz teraz edytować opis i zapisać w sklepie."
-        )
+        # Zaktualizuj komunikat
+        message_parts = []
+        if original_long_desc:
+            message_parts.append(f"Długi opis: {len(original_long_desc)} znaków")
+        if original_short_desc:
+            message_parts.append(f"Krótki opis: {len(original_short_desc)} znaków")
+        
+        if message_parts:
+            messagebox.showinfo(
+                "Sukces", 
+                f"Wczytano oryginalne opisy produktu do edytora.\n\n" +
+                "\n".join(message_parts) +
+                "\n\nMożesz teraz edytować opisy i zapisać w sklepie."
+            )
             
     def update_products(self):
         """Aktualizuj produkty w systemie"""
