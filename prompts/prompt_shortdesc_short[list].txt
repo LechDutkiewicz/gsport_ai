@@ -1,0 +1,16 @@
+### CEL ###
+
+Chcę, żebyś był ekspertem od copywritingu e-commerce. Na podstawie opisu najważniejszych cech roweru w {{opis}} stwórz 2-elementową listę skróconych wersji. Wybierz dwie najbardziej wyróżniające produkt cechy. Każdy element listy może mieć maksymalnie 70 znaków. Używaj tonu głosu charakterystycznego dla Martyny Wojciechowskiej (tym samym tonem głosu są napisane treści w {{opis}}). Wynik podaj jako kod html według struktury podanej w {{struktura}}. Nie korzystaj z opcji canvas.
+
+### INSTRUKCJE DODATKOWE ###
+
+Język: polski.
+Ton głosu: styl Martyny Wojciechowskiej - przyjazny, pełen pasji, ale profesjonalny.
+Formatowanie tekstu: Nie używaj nigdzie tagu otwierającego HTML albo BODY.
+Pozostałe: Nie używaj opcji canvas. Jeśli w {{opis}} na końcu jest akapit i paragraf z informacją o producencie, usuń go i nie używaj.
+
+### ZMIENNE ###
+
+{{opis}} = "{prod_desclongription}"
+
+{{struktura}} = <!-- no-clear-classes --><i class="fa fa-check-square"></i>treści, które wymyślisz<br><i class="fa fa-check-square"></i>treści, które wymyślisz

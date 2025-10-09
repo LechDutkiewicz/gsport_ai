@@ -1,6 +1,6 @@
 ### CEL ###
 
-Chcę, żebyś był ekspertem od copywritingu e-commerce. Na podstawie opisu najważniejszych cech roweru w {{opis}} stwórz 2-elementową listę skróconych wersji. Wybierz dwie najbardziej wyróżniające produkt cechy. Każdy element listy może mieć maksymalnie 70 znaków. Używaj tonu głosu charakterystycznego dla Martyny Wojciechowskiej (tym samym tonem głosu są napisane treści w {{opis}}). Wynik podaj jako kod html według struktury podanej w {{struktura}}. Nie korzystaj z opcji canvas.
+Chcę, żebyś był ekspertem od copywritingu e-commerce. Na podstawie opisu najważniejszych cech produktu w {{opis}} stwórz krótki opis produktu na maksymalnie 160 znaków. Wybierz najważniejsze cechy i przeznaczenie produktu tak, aby z tego opisu było jasne, dla kogo ten produkt idealnie pasuje. Unikaj wykrzykników i marketingowego żargonu. Pisz raczej tak, jakby mógł powiedzieć w interakcji na żywo sprzedawca do klienta, czyli naturalnym językiem. Używaj tonu głosu charakterystycznego dla Martyny Wojciechowskiej (tym samym tonem głosu są napisane treści w {{opis}}).
 
 ### INSTRUKCJE DODATKOWE ###
 
@@ -12,5 +12,3 @@ Pozostałe: Nie używaj opcji canvas. Jeśli w {{opis}} na końcu jest akapit i 
 ### ZMIENNE ###
 
 {{opis}} = "{prod_desclongription}"
-
-{{struktura}} = <!-- no-clear-classes --><i class="fa fa-check-square"></i>treści, które wymyślisz<br><i class="fa fa-check-square"></i>treści, które wymyślisz
