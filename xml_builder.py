@@ -34,7 +34,7 @@ class XMLBuilder:
     """Builder do tworzenia XML dla aktualizacji produktów"""
     
     @staticmethod
-    def build_product_xml(product_id: str, data_manager: ProductDataManager) -> str:
+    def build_product_xml(product_id: str, data_manager: ProductDataManager, use_options: bool = True) -> str:
         """
         Zbuduj XML dla aktualizacji pojedynczego produktu
         
@@ -93,7 +93,7 @@ class XMLBuilder:
             has_info_options = True
             
         # Dodaj sekcję info_options jeśli są parametry wzrostu
-        if has_info_options:
+        if has_info_options and use_options:
             xml_parts.append('        <info_options>')
             xml_parts.extend(info_options_xml)
             xml_parts.append('        </info_options>')
@@ -117,17 +117,17 @@ class XMLBuilder:
                 options_xml.append(f'            </options>')
             has_options = True
         
-        # Dodaj parametr koloru jeśli został wybrany (do options)
-        if data_manager.parameters.color and data_manager.parameters.color_remote_id:
+        # Dodaj kolory jeśli zostały wybrane (do options)
+        for color_key, remote_id in data_manager.parameters.colors:
             options_xml.extend([
                 '            <options>',
-                f'                <option name="Kolor dominujący" remote_id="{data_manager.parameters.color_remote_id}" required="1">{data_manager.parameters.color}</option>',
+                f'                <option name="Kolor dominujący" remote_id="{remote_id}" required="1">{color_key}</option>',
                 '            </options>'
             ])
             has_options = True
             
         # Dodaj sekcję options jeśli są opcje
-        if has_options:
+        if has_options and use_options:
             xml_parts.append('        <options>')
             xml_parts.extend(options_xml)
             xml_parts.append('        </options>')
@@ -223,10 +223,11 @@ class XMLBuilder:
                 has_options = True
             
             # Dodaj parametr koloru jeśli został wybrany (do options)
-            if data_manager.parameters.color and data_manager.parameters.color_remote_id:
+            # Dodaj kolory jeśli zostały wybrane (do options)
+            for color_key, remote_id in data_manager.parameters.colors:
                 options_xml.extend([
                     '            <options>',
-                    f'                <option name="Kolor dominujący" remote_id="{data_manager.parameters.color_remote_id}" required="1">{data_manager.parameters.color}</option>',
+                    f'                <option name="Kolor dominujący" remote_id="{remote_id}" required="1">{color_key}</option>',
                     '            </options>'
                 ])
                 has_options = True

@@ -213,60 +213,58 @@ class ProductInfoPanel:
         self._create_color_selector(inner)
         
     def _create_color_selector(self, parent):
-        """Utwórz selektor koloru"""
+        """Utwórz selektor kolorów (0-2)"""
         color_frame = tk.Frame(parent, bg="#FFFFFF")
         color_frame.pack(fill="x", pady=(0, 10))
         
         color_label = tk.Label(
             color_frame,
-            text="Kolor dominujący:",
+            text="Kolory dominujące (max 2):",
             font=("Arial", 9),
             bg="#FFFFFF",
             fg="#666666"
         )
         color_label.pack(anchor="w", pady=(0, 5))
         
-        dropdown_frame = tk.Frame(color_frame, bg="#FFFFFF")
-        dropdown_frame.pack(fill="x")
+        # Ramka z wybranymi kolorami
+        self.selected_colors_frame = tk.Frame(color_frame, bg="#FFFFFF")
+        self.selected_colors_frame.pack(fill="x", pady=(0, 5))
         
-        # Podgląd koloru
-        self.color_preview = tk.Frame(
-            dropdown_frame,
-            width=30,
-            height=30,
-            bg="#E5E5E5",
-            relief="solid",
-            bd=1
-        )
-        self.color_preview.pack(side="left", padx=(0, 10))
+        # Lista wybranych kolorów (początkowo pusta)
+        self.color_badges = []
         
-        # Dropdown - posortowany alfabetycznie
+        # Dropdown do dodawania koloru
+        add_color_frame = tk.Frame(color_frame, bg="#FFFFFF")
+        add_color_frame.pack(fill="x")
+        
+        # Posortowane kolory alfabetycznie
         sorted_colors = sorted(self.colors.values(), key=lambda x: x['name'])
         color_options = [""] + [f"{data['name']}" for data in sorted_colors]
+        
         self.color_dropdown = ttk.Combobox(
-            dropdown_frame,
+            add_color_frame,
             values=color_options,
             state="readonly",
-            width=25,
-            font=("Arial", 10)
+            width=20,
+            font=("Arial", 9)
         )
-        self.color_dropdown.pack(side="left", fill="x", expand=True)
-        self.color_dropdown.bind("<<ComboboxSelected>>", self.on_color_selected)
+        self.color_dropdown.pack(side="left", padx=(0, 10))
+        self.color_dropdown.bind("<<ComboboxSelected>>", self.on_color_add)
         
-        # Przycisk czyszczenia
-        self.btn_clear_color = tk.Button(
-            dropdown_frame,
-            text="✕",
-            font=("Arial", 10),
-            bg="#F0F0F0",
-            fg="#666666",
+        tk.Button(
+            add_color_frame,
+            text="Dodaj kolor",
+            font=("Arial", 8),
+            bg="#BFE02B",
+            fg="black",
             bd=1,
             relief="solid",
-            width=3,
-            command=self.clear_color_selection,
-            state="disabled"
-        )
-        self.btn_clear_color.pack(side="left", padx=(5, 0))
+            padx=10,
+            pady=2,
+            command=self.add_selected_color
+        ).pack(side="left")
+        
+        # Selektor wzrostu (już istniejący)
         self._create_height_selector(parent)
 
     def _create_height_selector(self, parent):
@@ -535,17 +533,144 @@ class ProductInfoPanel:
         if hasattr(self.app, 'product_manager'):
             self.app.product_manager.set_product_color(color_key, color_data['remote_id'])
     
-    def clear_color_selection(self):
-        """Wyczyść wybór koloru"""
-        self.selected_color.set("")
-        self.color_preview.config(bg="#E5E5E5")
-        if hasattr(self, 'rainbow_label'):
-            self.rainbow_label.pack_forget()
-        self.color_dropdown.set("")
-        self.btn_clear_color.config(state="disabled")
+    def on_color_add(self, event):
+        """Obsługa wyboru koloru z dropdown"""
+        self.add_selected_color()
+
+    def add_selected_color(self):
+        """Dodaj wybrany kolor"""
+        selected_name = self.color_dropdown.get()
         
+        if not selected_name:
+            return
+            
+        # Znajdź color_key dla wybranej nazwy
+        color_key = None
+        for key, data in self.colors.items():
+            if data['name'] == selected_name:
+                color_key = key
+                break
+                
+        if not color_key:
+            return
+            
+        # Dodaj kolor do managera
         if hasattr(self.app, 'product_manager'):
-            self.app.product_manager.set_product_color(None, None)
+            success = self.app.product_manager.data_manager.add_product_color(
+                color_key, 
+                self.colors[color_key]['remote_id']
+            )
+            
+            if success:
+                self.update_color_badges()
+                self.color_dropdown.set("")  # Wyczyść dropdown
+                print(f"Dodano kolor: {selected_name}")
+            else:
+                if self.app.product_manager.data_manager.get_selected_colors_count() >= 2:
+                    messagebox.showwarning("Limit kolorów", "Możesz wybrać maksymalnie 2 kolory.")
+                else:
+                    messagebox.showwarning("Duplikat", "Ten kolor jest już wybrany.")
+
+    def remove_color(self, color_key):
+        """Usuń kolor"""
+        if hasattr(self.app, 'product_manager'):
+            self.app.product_manager.data_manager.remove_product_color(color_key)
+            self.update_color_badges()
+            print(f"Usunięto kolor: {color_key}")
+
+    def update_color_badges(self):
+        """Aktualizuj wyświetlanie wybranych kolorów"""
+        # Usuń stare badges
+        for badge in self.color_badges:
+            badge.destroy()
+        self.color_badges.clear()
+        
+        # Pobierz wybrane kolory
+        if not hasattr(self.app, 'product_manager'):
+            return
+            
+        selected_colors = self.app.product_manager.data_manager.parameters.colors
+        
+        if not selected_colors:
+            # Pokaż placeholder
+            placeholder = tk.Label(
+                self.selected_colors_frame,
+                text="Brak wybranych kolorów",
+                font=("Arial", 8),
+                fg="#999999",
+                bg="#FFFFFF"
+            )
+            placeholder.pack(side="left")
+            self.color_badges.append(placeholder)
+            return
+        
+        # Utwórz badge dla każdego koloru
+        for color_key, remote_id in selected_colors:
+            color_data = self.colors[color_key]
+            
+            badge_frame = tk.Frame(
+                self.selected_colors_frame,
+                bg="#F0F0F0",
+                relief="raised",
+                bd=1
+            )
+            badge_frame.pack(side="left", padx=(0, 5))
+            
+            # Podgląd koloru
+            if color_data['hex'] == 'multi':
+                color_preview = tk.Label(
+                    badge_frame,
+                    text="🌈",
+                    bg="#FFFFFF",
+                    font=("Arial", 12),
+                    width=2
+                )
+            else:
+                color_preview = tk.Frame(
+                    badge_frame,
+                    width=20,
+                    height=20,
+                    bg=color_data['hex']
+                )
+                color_preview.pack_propagate(False)
+            
+            color_preview.pack(side="left", padx=3, pady=3)
+            
+            # Nazwa koloru
+            tk.Label(
+                badge_frame,
+                text=color_data['name'],
+                font=("Arial", 8),
+                bg="#F0F0F0",
+                fg="#333333"
+            ).pack(side="left", padx=(0, 5))
+            
+            # Przycisk usunięcia
+            tk.Button(
+                badge_frame,
+                text="✕",
+                font=("Arial", 8),
+                bg="#E24B38",
+                fg="white",
+                bd=0,
+                width=2,
+                command=lambda ck=color_key: self.remove_color(ck)
+            ).pack(side="left", padx=2)
+            
+            self.color_badges.append(badge_frame)
+
+    def set_colors_from_api_data(self):
+        """Ustaw kolory na podstawie danych z API"""
+        if hasattr(self.app, 'product_manager'):
+            self.update_color_badges()
+
+    def clear_color_selection(self):
+        """Wyczyść wybór kolorów"""
+        if hasattr(self.app, 'product_manager'):
+            self.app.product_manager.data_manager.clear_product_colors()
+            
+        self.color_dropdown.set("")
+        self.update_color_badges()
 
     def set_height_range(self):
         """Ustaw zakres wzrostu"""

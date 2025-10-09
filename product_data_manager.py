@@ -1,6 +1,6 @@
 # product_data_manager.py - rozszerzona wersja
 from dataclasses import dataclass
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Tuple
 from height_manager import HeightManager, HeightRange
 
 @dataclass
@@ -34,9 +34,12 @@ class GeneratedDescriptions:
 @dataclass
 class ProductParameters:
     """Parametry produktu"""
-    color: Optional[str] = None
-    color_remote_id: Optional[str] = None
+    colors: List[Tuple[str, str]] = None  # Lista tupli (color_key, remote_id)
     height_range: Optional[HeightRange] = None
+    
+    def __post_init__(self):
+        if self.colors is None:
+            self.colors = []
 
 @dataclass
 class OriginalOption:
@@ -236,9 +239,8 @@ class ProductDataManager:
                             
                         for value_id, value_data in values.items():
                             if isinstance(value_data, dict) and value_data.get('selected'):
-                                self.parameters.color = value_data.get('name', '')
-                                self.parameters.color_remote_id = str(value_id)
-                                return
+                                color_name = value_data.get('name', '')
+                                self.add_product_color(color_name, str(value_id))
                                 
         except (AttributeError, KeyError, TypeError) as e:
             print(f"Warning: Could not extract color parameter: {e}")
@@ -264,10 +266,34 @@ class ProductDataManager:
         elif desc_type == 'short':
             self.generated_descriptions.short = content
             
-    def set_product_color(self, color_key: Optional[str], remote_id: Optional[str]) -> None:
-        """Ustaw kolor produktu"""
-        self.parameters.color = color_key
-        self.parameters.color_remote_id = remote_id
+    def add_product_color(self, color_key: str, remote_id: str) -> bool:
+        """
+        Dodaj kolor produktu (maksymalnie 2)
+        
+        Returns:
+            True jeśli dodano, False jeśli limit osiągnięty
+        """
+        if len(self.parameters.colors) >= 2:
+            return False
+            
+        # Sprawdź czy kolor już istnieje
+        if any(c[0] == color_key for c in self.parameters.colors):
+            return False
+            
+        self.parameters.colors.append((color_key, remote_id))
+        return True
+
+    def remove_product_color(self, color_key: str) -> None:
+        """Usuń kolor produktu"""
+        self.parameters.colors = [(k, rid) for k, rid in self.parameters.colors if k != color_key]
+
+    def clear_product_colors(self) -> None:
+        """Wyczyść wszystkie kolory"""
+        self.parameters.colors = []
+
+    def get_selected_colors_count(self) -> int:
+        """Pobierz liczbę wybranych kolorów"""
+        return len(self.parameters.colors)
         
     def set_product_height_range(self, min_height: int, max_height: int) -> bool:
         """

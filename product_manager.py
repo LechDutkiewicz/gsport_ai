@@ -189,11 +189,9 @@ class ProductManager:
                 self.app.root
             )
         
-        # Ustaw kolor jeśli został wyodrębniony
-        if self.data_manager.parameters.color_remote_id:
-            self.app.product_info_panel.set_color_from_remote_id(
-                self.data_manager.parameters.color_remote_id
-            )
+        # Ustaw kolory jeśli zostały wyodrębnione
+        if self.data_manager.parameters.colors:
+            self.app.product_info_panel.set_colors_from_api_data()
 
         # Ustaw wzrost jeśli został wyodrębniony
         if self.data_manager.parameters.height_range:
@@ -373,7 +371,7 @@ class ProductManager:
             # Aktualizuj podobne produkty jeśli istnieją
             similar_ids = self._get_similar_product_ids()
             for similar_id in similar_ids:
-                if self._update_single_product(similar_id):
+                if self._update_single_product(similar_id, False):
                     self.data_manager.add_processed_id(similar_id)
                     
             messagebox.showinfo(
@@ -398,7 +396,7 @@ class ProductManager:
                         
         return similar_ids
         
-    def _update_single_product(self, product_id: str) -> bool:
+    def _update_single_product(self, product_id: str, use_options: bool = True) -> bool:
         """Aktualizuj pojedynczy produkt"""
         
         # DODAJ DEBUG INFO:
@@ -427,14 +425,15 @@ class ProductManager:
         else:
             print(f"   - Wzrost: BRAK nowych wartości")
         print(f"   - Options: {len(self.data_manager.original_options)} oryginalnych")
-        if self.data_manager.parameters.color:
-            print(f"   - Kolor: {self.data_manager.parameters.color}")
+        if self.data_manager.parameters.colors:
+            colors_str = ", ".join([c[0] for c in self.data_manager.parameters.colors])
+            print(f"   - Kolory: {colors_str} ({len(self.data_manager.parameters.colors)})")
         else:
-            print(f"   - Kolor: BRAK zmiany")
+            print(f"   - Kolory: BRAK zmiany")
         print()
         
         # Zbuduj XML
-        xml_content = XMLBuilder.build_product_xml(product_id, self.data_manager)
+        xml_content = XMLBuilder.build_product_xml(product_id, self.data_manager, use_options)
         
         # Wyślij aktualizację
         success = self.gsport_client.update_product(xml_content)
